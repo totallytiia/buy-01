@@ -1,0 +1,10 @@
+<div class="w-full min-h-[calc(100vh)] bg-slate-50 text-center dark:bg-slate-900">
+  <router-outlet></router-outlet>
+  <label class="fixed bottom-4 left-4 inline-flex items-center cursor-pointer">
+    <input [checked]="darkMode()" (click)="darkMode.set(!darkMode())" type="checkbox" value="" class="sr-only peer">
+    <div
+      class="outline-none w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-0 peer-focus:none dark:peer-focus:none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-none after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-none after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-none peer-checked:bg-slate-700">
+    </div>
+    <span class="ms-3 uppercase text-sm font-medium text-slate-900 dark:text-slate-500">Toggle me</span>
+  </label>
+</div>

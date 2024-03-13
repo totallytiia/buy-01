@@ -1,0 +1,11 @@
+<app-navigationbar></app-navigationbar>
+<div class="justify-center items-center flex flex-col min-h-[calc(100vh-51.98px)]">
+	<ng-template [ngIf]="isLoggedIn">
+		<h1
+			class="text-6xl capitalize font-bold mb-4 bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-600 inline-block text-transparent bg-clip-text">
+			Welcome {{currentUser.name}}</h1>
+		<p class="text-lg font-semibold dark:text-indigo-400 dark:text-opacity-30">You are logged in as
+			{{currentUser.email}}</p>
+	</ng-template>
+
+</div>

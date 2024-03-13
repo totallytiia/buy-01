@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+form input {
+	@apply text-slate-600 dark:text-slate-200; /* This is the hex code for Tailwind's slate-400 */
+  }

@@ -1,0 +1,134 @@
+<app-navigationbar></app-navigationbar>
+<div class="mx-auto max-w-lg min-h-[calc(100vh-63.98px)] justify-center items-center flex flex-col">
+	<div class="relative flex justify-center items-center">
+		<form (ngSubmit)="registerUser()"
+			class="bg-white min-w-full rounded-xl shadow-lg px-8 pt-6 pb-8 mb-2 dark:bg-slate-950 dark:bg-opacity-40"
+			#registrationForm="ngForm">
+			<h2 class="font-bold text-center mb-2 text-lg dark:text-slate-100 dark:hover:text-slate-200">What type of
+				user
+				are you?</h2>
+
+			<div class="mb-2 flex items-center justify-center py-2 px-3">
+				<div class="flex items-center mr-2">
+					<input [(ngModel)]="user.role" #role="ngModel" type="radio" id="seller" name="role" value="Seller"
+						class="form-radio h-5 w-5 accent-indigo-600" required>
+					<label for="seller"
+						class="ml-1 text-sm font-bold  text-slate-700 dark:text-slate-100 ">Seller</label>
+				</div>
+				<div class="flex items-center">
+					<input [(ngModel)]="user.role" #role="ngModel" type="radio" id="client" name="role" value="Client"
+						class="form-radio h-5 w-5 accent-indigo-600" required>
+					<label for="client"
+						class="ml-1 text-sm font-bold  text-slate-700 dark:text-slate-100">Client</label>
+				</div>
+			</div>
+
+			<div class="flex items-center border-2 py-2 px-3 rounded-xl dark:text-slate-100 dark:hover:text-slate-200">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+					stroke="currentColor" class="w-5 h-5 text-slate-400">
+					<path stroke-linecap="round" stroke-linejoin="round"
+						d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+				</svg>
+
+				<input [(ngModel)]="user.name" type="text" class="pl-2 outline-none bg-transparent"
+					placeholder="Enter name" name="name" #name="ngModel" required minlength="2">
+			</div>
+
+			<div
+				class="mt-4 flex items-center border-2 py-2 px-3 rounded-xl dark:text-slate-100 dark:hover:text-slate-200">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24"
+					stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+						d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+				</svg>
+				<input [(ngModel)]="user.email" type="email" class="pl-2 outline-none bg-transparent"
+					placeholder="Enter email" name="email" #email="ngModel" required email>
+			</div>
+
+			<div
+				class="mt-4 flex items-center border-2 py-2 px-3 rounded-xl dark:text-slate-100 dark:hover:text-slate-200">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" viewBox="0 0 20 20"
+					fill="currentColor">
+					<path fill-rule="evenodd"
+						d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+						clip-rule="evenodd" />
+				</svg>
+				<input [(ngModel)]="user.password" type="password" class="pl-2 outline-none bg-transparent"
+					placeholder="Enter password" name="password" #password="ngModel" required minlength="6">
+			</div>
+
+			<div *ngIf="user.role === 'Seller'"
+				class="mt-4 flex items-center border-2 py-2 px-3 rounded-xl dark:text-slate-100 dark:hover:text-slate-200">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+					class="w-5 h-5 text-slate-400">
+					<path d="M12 9a3.75 3.75 0 1 0 0 7.5A3.75 3.75 0 0 0 12 9Z" />
+					<path fill-rule="evenodd"
+						d="M9.344 3.071a49.52 49.52 0 0 1 5.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 0 1-3 3h-15a3 3 0 0 1-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 0 0 1.11-.71l.822-1.315a2.942 2.942 0 0 1 2.332-1.39ZM6.75 12.75a5.25 5.25 0 1 1 10.5 0 5.25 5.25 0 0 1-10.5 0Zm12-1.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+						clip-rule="evenodd" />
+				</svg>
+
+
+				<input [(ngModel)]="user.avatar" type="text" class="pl-2 outline-none bg-transparent"
+					placeholder="Avatar URL" name="avatar" #avatar="ngModel">
+			</div>
+
+			<div class="flex items-center justify-center mt-4">
+				<button type="submit" [disabled]="!registrationForm.form.valid"
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full dark:hover:bg-indigo-800">Register</button>
+			</div>
+		</form>
+		<div
+			class="ERRORS absolute left-full ml-4 w-56 bg-white rounded-xl shadow-lg text-left dark:text-slate-100 dark:bg-indigo-600 dark:bg-opacity-100">
+			<div *ngIf="role.invalid && (name.dirty || name.touched || email.dirty || email.touched ||
+			password.dirty || password.touched)" class="flex gap-2  px-4 py-2 [&>div]:!my-auto">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+					stroke="currentColor" class="w-6 h-6 shrink-0">
+					<path stroke-linecap="round" stroke-linejoin="round"
+						d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+				</svg>
+				<div class="my-auto dark:text-slate-100" *ngIf="role.errors?.['required']">Role is required.</div>
+			</div>
+
+			<div *ngIf="name.invalid && (name.dirty || name.touched)" class=" flex gap-2  px-4 py-2 [&>div]:!my-auto">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+					stroke="currentColor" class="w-6 h-6 shrink-0">
+					<path stroke-linecap="round" stroke-linejoin="round"
+						d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+				</svg>
+
+				<div class="my-auto " *ngIf="name.errors?.['required']">Name is required.</div>
+				<div class="my-auto " *ngIf=" name.errors?.['minlength']">Name must be at least 2
+					characters long.</div>
+			</div>
+			<div class=" rounded-xl text-left dark:text-slate-100 ">
+				<div *ngIf="email.invalid && (email.dirty || email.touched)"
+					class="flex gap-2 px-4 py-2 [&>div]:!my-auto ">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+						stroke="currentColor" class="w-6 h-6 shrink-0">
+						<path stroke-linecap="round" stroke-linejoin="round"
+							d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+					</svg>
+
+					<div class="my-auto" *ngIf="email.errors?.['required']">Email is required.</div>
+					<div class="my-auto" *ngIf="email.errors?.['email']">Invalid email format.</div>
+				</div>
+				<div *ngIf="password.invalid && (password.dirty || password.touched)"
+					class="flex gap-2 px-4 py-2 [&>div]:!my-auto">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+						stroke="currentColor" class="w-6 h-6 shrink-0">
+						<path stroke-linecap="round" stroke-linejoin="round"
+							d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+					</svg>
+
+					<div class="my-auto" *ngIf="password.errors?.['required']">Password is required.</div>
+					<div class="my-auto" *ngIf="password.errors?.['minlength']">Password must be at least 6 characters
+						long.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<button (click)="redirectLogin()"
+		class="font-bold text-sm text-indigo-600 hover:text-indigo-800 text-center flex justify-center">
+		Already registered? Login here
+	</button>
+</div>

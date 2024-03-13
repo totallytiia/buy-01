@@ -1,0 +1,215 @@
+<app-navigationbar></app-navigationbar>
+
+<div class="min-h-[calc(100vh-69.98px)] w-full px-8 py-4">
+	<div class="m-6">
+		<div class="bg-white dark:bg-slate-800 rounded-xl">
+			<div class="flex justify-between mx-2 px-2 pt-4">
+				<div class="flex flex-row gap-2 items-center justify-center uppercase text-sm">
+					<button (click)="handleProducts()" class="uppercase dark:text-slate-200">products</button>
+					<p class="dark:text-slate-200 !m-0 cursor-default">></p>
+					<p class="dark:text-slate-200 !m-0 cursor-default">{{product.name}}</p>
+				</div>
+				<ng-template [ngIf]="user.id === product.userId">
+					<div class="flex justify-end gap-2 my-auto">
+						<button (click)="toggleModal()"
+							class="flex gap-1 my-auto p-2 bg-slate-500 dark:bg-indigo-700 dark:text-slate-200 border-none text-white rounded-full shadow-lg">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+								stroke="currentColor" class="w-6 h-6">
+								<path stroke-linecap="round" stroke-linejoin="round"
+									d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+							</svg>
+						</button>
+						<button
+							class="flex gap-2 my-auto p-2 bg-slate-500 dark:bg-indigo-700 dark:text-slate-200 border-none text-white rounded-full shadow-lg"
+							(click)="
+							deleteProduct(product.id)">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+								stroke="currentColor" class="w-6 h-6">
+								<path stroke-linecap="round" stroke-linejoin="round"
+									d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+							</svg>
+						</button>
+					</div>
+				</ng-template>
+			</div>
+			<div class="flex flex-row p-5 justify-around">
+				<div class="slider-container w-96 h-96 m-1 relative rounded-lg overflow-hidden">
+					<div class="slider mb-2 flex transition-transform duration-500 ease-in-out"
+						[style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
+						<ng-template ngFor let-tempMedia [ngForOf]="mediaList">
+							<ng-container *ngIf="tempMedia.productId === product.id">
+								<div class="slide min-w-full">
+									<img [src]="previewMedia(tempMedia)" alt="{{product.name}}" class=" w-96 h-96">
+								</div>
+							</ng-container>
+						</ng-template>
+					</div>
+					<button (click)="previous()" class="absolute inset-y-0 left-0 flex items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+							stroke="currentColor" class="w-6 h-6">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+						</svg>
+					</button>
+					<button (click)="next()" class="absolute inset-y-0 right-0 flex items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+							stroke="currentColor" class="w-6 h-6">
+							<path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+						</svg>
+					</button>
+				</div>
+
+				<div class="p-4 text-center w-1/2 flex flex-col gap-2 justify-center">
+					<div>
+						<h2 class="text-xl capitalize dark:text-slate-200 text-slate-800 font-semibold">
+							{{product.name}}
+						</h2>
+						<p class="text-slate-600 dark:text-slate-200 mt-1">{{product.description}}</p>
+					</div>
+					<button
+						class="px-3 py-3 my-2 bg-indigo-600 border-none font-bold text-sm uppercase text-white  rounded-xl w-36 mx-auto">
+						{{product.price | currency:"EUR"}}
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- add media  -->
+
+		<ng-template [ngIf]="user.id === product.userId">
+			<div>
+				<div>
+					<form (ngSubmit)="handleStoreMedia()" enctype="multipart/form-data">
+						<label
+							class=" flex flex-row gap-2  text-white text-sm px-4 py-2.5 outline-none rounded w-max cursor-pointer mx-auto font-[sans-serif]">
+							<div class="my-auto bg-gray-500 hover:bg-gray-700 py-3 px-4 rounded-xl flex flex-row">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 mr-2 my-auto fill-white inline"
+									viewBox="0 0 32 32">
+									<path
+										d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z"
+										data-original="#000000" />
+									<path
+										d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z"
+										data-original="#000000" />
+								</svg>
+								ADD MEDIA
+							</div>
+							<div>
+								<input
+									class="px-3 py-2 my-2 rounded-xl hidden mr-2 text-sm text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+									(change)="onFileSelected($event)" type="file" name="file" accept="image/*">
+								<button
+									class="px-3 py-3 my-2 bg-indigo-600 border-none font-bold text-sm uppercase text-white rounded-xl w-36 mx-auto"
+									type="submit">Upload</button>
+							</div>
+						</label>
+						<div class="flex justify-center">
+							<img *ngIf="previewImage" [src]="previewImage" class="w-20 h-20 object-cover rounded-lg"
+								alt="Image preview">
+						</div>
+					</form>
+
+				</div>
+			</div>
+			<div *ngIf="isModalOpen" class="fixed inset-0 z-50 bg-white bg-opacity-50">
+				<div
+					class="modal-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 mx-auto">
+					<div class="relative flex justify-center items-center">
+						<span class="close absolute top-2 right-3 p-4 text-2xl text-white cursor-pointer"
+							(click)="toggleModal()">&times;</span>
+						<form (ngSubmit)="handleUpdateProduct()"
+							class="bg-gradient-to-t from-fuchsia-500 to-indigo-600 dark:from-fuchsia-700 dark:to-indigo-800 rounded-xl shadow-lg p-8 my-auto w-96"
+							#productForm="ngForm">
+							<h1 class="font-bold text-md mb-2 uppercase tracking-wide text-white">Update product</h1>
+
+							<!-- Name Field -->
+							<div class="flex items-center py-2 px-1 rounded-xl mb-2 bg-white opacity-90">
+								<input class="pl-2 outline-none border-none w-full text-black dark:text-black"
+									type="text" id="name" name="name" placeholder="Enter name" required
+									[(ngModel)]="productCopy.name" #name="ngModel">
+							</div>
+
+							<!-- Description Field -->
+							<div class="items-center py-2 px-1 rounded-xl mb-2 bg-white opacity-90">
+								<textarea
+									class="pl-2 outline-none border-none w-full resize-none text-black dark:text-black"
+									id="description" name="description" placeholder="Enter description" required
+									[(ngModel)]="productCopy.description" #description="ngModel" minlength="6"
+									maxlength="200"></textarea>
+							</div>
+
+							<!-- Price Field -->
+							<div class="flex items-center py-2 px-1 rounded-xl mb-2 bg-white opacity-90">
+								<input class="pl-2 outline-none border-none w-full text-black dark:text-black"
+									type="number" id="price" name="price" placeholder="Enter price" required
+									[(ngModel)]="productCopy.price" #price="ngModel" min="0.01" max="5000.00">
+							</div>
+
+							<!-- Quantity Field -->
+							<div class="flex items-center py-2 px-1 rounded-xl mb-2 bg-white opacity-90">
+								<input class="pl-2 outline-none border-none w-full text-black dark:text-black"
+									type="number" id="quantity" name="quantity" placeholder="Enter quantity" required
+									[(ngModel)]="productCopy.quantity" #quantity="ngModel" max="1000">
+							</div>
+
+							<!-- Submit Button -->
+							<div class="flex items-center justify-center mt-2">
+								<button type="submit" [disabled]="!productForm.form.valid"
+									class="bg-white uppercase hover:bg-indigo-50 text-indigo-600 text-sm tracking-wide font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full">
+									Update product
+								</button>
+							</div>
+						</form>
+						<div class="ERRORS absolute left-full ml-4 w-56 bg-white rounded-xl shadow-lg text-left
+						dark:text-slate-100 dark:bg-indigo-600 dark:bg-opacity-100">
+							<div *ngIf="name.invalid && (name.dirty || name.touched)"
+								class="ERRORS flex gap-2 px-4 py-2 [&>div]:!my-auto">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+									stroke-width="1.5" stroke="currentColor" class="w-6 h-6 shrink-0">
+									<path stroke-linecap="round" stroke-linejoin="round"
+										d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+								</svg>
+								<div *ngIf="name.errors?.['required']">Name is required.</div>
+							</div>
+							<div *ngIf="description.invalid && (description.dirty || description.touched)"
+								class="ERRORS flex gap-2 px-4 py-2 [&>div]:!my-auto">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+									stroke-width="1.5" stroke="currentColor" class="w-6 h-6 shrink-0">
+									<path stroke-linecap="round" stroke-linejoin="round"
+										d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+								</svg>
+								<div *ngIf="description.errors?.['required']">Description is required.</div>
+								<div *ngIf="description.errors?.['minlength']">Description must be at least 6 characters
+									long.</div>
+								<div *ngIf="description.errors?.['maxlength']">Description must be less than 200
+									characters
+									long.</div>
+							</div>
+							<div *ngIf="price.invalid && (price.dirty || price.touched)"
+								class="ERRORS flex gap-2 px-4 py-2 [&>div]:!my-auto">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+									stroke-width="1.5" stroke="currentColor" class="w-6 h-6 shrink-0">
+									<path stroke-linecap="round" stroke-linejoin="round"
+										d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+								</svg>
+								<div *ngIf="price.errors?.['required']">Price is required.</div>
+								<div *ngIf="price.errors?.['min']">Price must be at least 0.01.</div>
+								<div *ngIf="price.errors?.['max']">Price must not exceed 5000.00.</div>
+							</div>
+							<div *ngIf="quantity.invalid && (quantity.dirty || quantity.touched)"
+								class="ERRORS flex gap-2 px-4 py-2 [&>div]:!my-auto">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+									stroke-width="1.5" stroke="currentColor" class="w-6 h-6 shrink-0">
+									<path stroke-linecap="round" stroke-linejoin="round"
+										d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+								</svg>
+								<div *ngIf="quantity.errors?.['required']">Quantity is required.</div>
+								<div *ngIf="quantity.errors?.['max']">Quantity must not exceed 1000.</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ng-template>
+
+	</div>
+</div>

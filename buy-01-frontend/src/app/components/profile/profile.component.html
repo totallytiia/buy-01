@@ -1,0 +1,214 @@
+<app-navigationbar></app-navigationbar>
+
+<!-- SELLER VIEW -->
+
+<ng-template [ngIf]="isSeller">
+	<div class="px-8 pt-4">
+		<div class="mx-auto mt-4 max-w-lg justify-center flex flex-col">
+			<h1 class="!my-auto font-bold text-2xl dark:text-slate-200">Profile</h1>
+		</div>
+
+		<!-- USER INFO -->
+
+		<div
+			class="m-6 bg-gradient-to-r text-white overflow-hidden from-rose-400 via-fuchsia-500 to-indigo-600 dark:from-rose-500 dark:via-fuchsia-700 dark:to-indigo-800 p-2 flex rounded-full justify-around shadow-lg">
+			<div class="flex gap-2">
+				<img *ngIf="user.avatar" class="h-7 w-7 rounded-full object-cover" [src]="user.avatar"
+					(error)="user.avatar = undefined">
+				<p class="!my-auto text-xs uppercase tracking-widest font-bold">name — {{user.name}}</p>
+			</div>
+			<p class="!my-auto text-xs uppercase tracking-widest font-bold">email — {{user.email}}</p>
+			<p class="!my-auto text-xs uppercase tracking-widest font-bold">role — {{user.role}}</p>
+		</div>
+
+		<!-- PRODUCTS -->
+
+		<div class="m-6 bg-white dark:bg-slate-800 rounded-xl p-2 shadow-lg relative">
+			<h1 class="font-bold text-xl dark:text-slate-200 !my-4">My products</h1>
+			<div class="absolute right-4 top-4">
+				<button (click)="toggleModal()"
+					class="flex gap-1 p-2 bg-slate-500 dark:bg-indigo-700 dark:text-slate-200 border-none text-white rounded-full shadow-lg">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+						stroke="currentColor" class="w-6 h-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+					</svg>
+				</button>
+			</div>
+
+			<!-- PRODUCTS LIST -->
+
+			<div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mx-8 mb-8">
+				<ng-container class="" *ngFor="let product of products">
+					<div (click)="redirectProductDetails(product.id)"
+						class="bg-white shadow-lg rounded-xl overflow-hidden dark:bg-slate-900">
+						<ng-container *ngIf="hasMedia(product.id!); else noMedia">
+							<img [src]="previewMedia(getMediaByProductId(product.id)[0])"
+								class="w-full border-4 border-white bg-slate-50 dark:bg-slate-600 dark:border-none rounded-t-xl h-60 object-cover object-center"
+								alt="{{product.name}}">
+						</ng-container>
+						<ng-template #noMedia>
+							<img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png"
+								class="w-full border-4 border-white bg-slate-50 dark:bg-slate-600 dark:border-none rounded-xl h-56 object-cover object-center"
+								alt="Image not found">
+						</ng-template>
+						<div class="p-4">
+							<h2 class="text-lg !mb-1 text-slate-800 dark:text-slate-200 font-semibold">{{product.name}}
+							</h2>
+							<p class="text-slate-600 dark:text-slate-200 text-xs">{{product.description}}</p>
+							<div class="flex item-center justify-around gap-2 mt-4 mx-6">
+								<h3 class="text-xs font-bold text-slate-600 dark:text-slate-200 !my-auto">
+									{{product.price | currency:"EUR"}}</h3>
+								<button
+									class="px-8 uppercase bg-indigo-700 font-bold text-md py-3 border-none text-white rounded-xl">
+									VIEW</button>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+			</div>
+		</div>
+
+		<!-- ADDING NEW PRODUCTS -->
+
+		<div *ngIf="isModalOpen" class="fixed inset-0 z-50 bg-white bg-opacity-50">
+			<div
+				class="modal-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-max p-4 mx-auto ">
+				<div class="relative flex justify-center items-center">
+					<span class="close absolute top-0 right-1 p-2 text-2xl text-white cursor-pointer"
+						(click)="toggleModal()">&times;</span>
+
+					<!-- FORM -->
+
+					<form (ngSubmit)="handleStoreProduct()"
+						class="bg-gradient-to-t from-fuchsia-500 to-indigo-600 dark:from-fuchsia-700 dark:to-indigo-800 rounded-xl shadow-lg p-8 my-auto w-96"
+						#productForm="ngForm">
+						<h1 class="font-bold text-md mb-2 uppercase tracking-wide text-white ">Add a new product
+						</h1>
+						<div class="flex items-center py-2 px-1 rounded-xl mb-2 bg-white opacity-90">
+							<input class="pl-2 outline-none border-none w-full text-black dark:text-black" type="text"
+								id="name" name="name" #name="ngModel" placeholder="Enter name"
+								[(ngModel)]="product.name" required>
+						</div>
+						<div class="items-center  py-2 px-1 rounded-xl mb-2 bg-white opacity-90">
+							<textarea
+								class="pl-2 outline-none border-none w-full resize-none text-black dark:text-black"
+								id="description" name="description" placeholder="Enter description"
+								[(ngModel)]="product.description" #description="ngModel" minlength="6"
+								maxlength="200"></textarea>
+						</div>
+						<div class="flex items-center  py-2 px-1 rounded-xl mb-2 bg-white opacity-90">
+							<input class="pl-2 outline-none border-none w-full text-black dark:text-black" type="number"
+								id="price" name="price" placeholder="Enter price" required [(ngModel)]="product.price"
+								#price="ngModel" min="0.01" max="5000.00">
+						</div>
+						<div class="flex items-center  py-2 px-1 rounded-xl mb-2 bg-white opacity-90">
+							<input class="pl-2 outline-none border-none w-full text-black dark:text-black" type="number"
+								id="quantity" name="quantity" placeholder="Enter quantity" required
+								[(ngModel)]="product.quantity" #quantity="ngModel" max="1000"
+								[(ngModel)]="product.quantity" required max="1000">
+						</div>
+						<div class="flex items-center justify-center mt-2">
+							<button type="submit" [disabled]="!productForm.form.valid"
+								class="bg-white uppercase hover:bg-indigo-50 text-indigo-600 text-sm tracking-wide font-bold py-3 px-4 rounded-xl focus:outline-none focus:shadow-outline w-full">
+								Add product
+							</button>
+						</div>
+					</form>
+
+					<!-- FORM ERRORS -->
+
+					<div
+						class="ERRORS absolute left-full ml-4 w-56 bg-white rounded-xl shadow-lg text-left dark:text-slate-100 dark:bg-indigo-600 dark:bg-opacity-100">
+						<div *ngIf="name.invalid && (name.dirty || name.touched)"
+							class="ERRORS flex gap-2  px-4 py-2 [&>div]:!my-auto">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+								stroke="currentColor" class="w-6 h-6 shrink-0">
+								<path stroke-linecap="round" stroke-linejoin="round"
+									d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+							</svg>
+							<div *ngIf="name.errors?.['required']">Name is required.</div>
+						</div>
+						<div *ngIf="description.invalid && (description.dirty || description.touched)"
+							class="ERRORS flex gap-2  px-4 py-2 [&>div]:!my-auto">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+								stroke="currentColor" class="w-6 h-6 shrink-0">
+								<path stroke-linecap="round" stroke-linejoin="round"
+									d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+							</svg>
+							<div *ngIf="description.errors?.['required']">Description is required.</div>
+							<div *ngIf="description.errors?.['minlength']">Description must be at least 6 characters
+								long.
+							</div>
+							<div *ngIf="description.errors?.['maxlength']">Description must be less than 200 characters
+								long.
+							</div>
+						</div>
+						<div *ngIf="price.invalid && (price.dirty || price.touched)"
+							class="ERRORS flex gap-2  px-4 py-2 [&>div]:!my-auto">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+								stroke="currentColor" class="w-6 h-6 shrink-0">
+								<path stroke-linecap="round" stroke-linejoin="round"
+									d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+							</svg>
+							<div *ngIf="price.errors?.['required']">Price is required.</div>
+							<div *ngIf="price.errors?.['min']">Price must be at least 0.01.</div>
+							<div *ngIf="price.errors?.['max']">Price must not exceed 5000.00.</div>
+						</div>
+						<div *ngIf="quantity.invalid && (quantity.dirty || quantity.touched)"
+							class="ERRORS flex gap-2  px-4 py-2 [&>div]:!my-auto">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+								stroke="currentColor" class="w-6 h-6 shrink-0">
+								<path stroke-linecap="round" stroke-linejoin="round"
+									d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+							</svg>
+							<div *ngIf="quantity.errors?.['required']">Quantity is required.</div>
+							<div *ngIf="quantity.errors?.['max']">Quantity must not exceed 1000.</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- MEDIA LIST  -->
+
+	<!-- List all media here for the seller to manage -->
+
+	<div class="mx-16 rounded-xl p-2  relative min-h-96">
+		<h1 class="font-bold text-xl dark:text-slate-200 !my-4">My media</h1>
+		<div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mx-8 mb-8">
+			<ng-container class="" *ngFor="let product of products">
+				<ng-container class="" *ngFor="let tempMedia of mediaList">
+					<ng-container *ngIf="tempMedia.productId === product.id && product.userId == user.id">
+						<div class="relative">
+							<div class="">
+								<img [src]="previewMedia(tempMedia)" alt="{{product.name}}"
+									class="h-64 w-64 object-cover object-center rounded-xl">
+								<span
+									class="absolute top-2 left-2 p-2 text-2xl text-white bg-slate-600 shadow-lg rounded-full cursor-pointer"
+									(click)="deleteMedia(tempMedia.id)"><svg xmlns="http://www.w3.org/2000/svg"
+										fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+										class="w-5 h-5">
+										<path stroke-linecap="round" stroke-linejoin="round"
+											d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+									</svg></span>
+							</div>
+						</div>
+					</ng-container>
+				</ng-container>
+			</ng-container>
+		</div>
+	</div>
+
+</ng-template>
+
+<!-- CLIENT VIEW  -->
+
+<ng-template [ngIf]="isClient">
+	<div
+		class="m-6 bg-gradient-to-r text-white overflow-hidden from-rose-400 via-fuchsia-500 to-indigo-600 dark:from-rose-500 dark:via-fuchsia-700 dark:to-indigo-800 p-2 flex rounded-full justify-around shadow-lg">
+		<p class="text-xs uppercase tracking-widest font-bold">name — {{user.name}}</p>
+		<p class="text-xs uppercase tracking-widest font-bold">email — {{user.email}}</p>
+		<p class="text-xs uppercase tracking-widest font-bold">role — {{user.role}}</p>
+	</div>
+</ng-template>
